@@ -1,9 +1,5 @@
 <div #container class="container" (click)="toggleGame()">
-  <arkanoid-game-circle
-    [positionX]="circlePosition.x"
-    [positionY]="circlePosition.y"
-    [size]="circleSize"
-  ></arkanoid-game-circle>
+  <arkanoid-game-circle></arkanoid-game-circle>
   <arkanoid-game-player-control
     [height]="5"
     [topPosition]="canvas.height - 5"

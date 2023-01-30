@@ -1,5 +1,6 @@
 import {Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
 import {Boundary, Canvas, CanvasMovement, Game, GameState} from '@arkanoid-game/core';
+import {GameStore} from '../game.store';
 
 @Component({
   selector: 'arkanoid-game-root',
@@ -19,7 +20,6 @@ export class AppComponent implements OnInit {
   canvas = {width: 500, height: 400};
   gameStarted = false;
   private game!: Game;
-  circlePosition: { x: number, y: number } = {x: 0, y: 0};
   circleSize = 10;
 
   player1Config = {
@@ -34,6 +34,9 @@ export class AppComponent implements OnInit {
     x2: this.player1Config.startPositionX + this.player1Config.width,
     y2: this.player1Config.positionY + this.player1Config.height - this.circleSize
   });
+
+  constructor(private gameStore: GameStore) {
+  }
 
   ngOnInit() {
     this.initializeGame();
@@ -66,9 +69,7 @@ export class AppComponent implements OnInit {
     );
     this.game = new Game(movementStrategy);
 
-    this.game.getGameState().subscribe(({ballPosition: {x, y}}: GameState) => {
-      this.circlePosition = {x, y};
-    });
+    this.game.getGameState().subscribe((gameState: GameState) => this.gameStore.setGameState(gameState));
   }
 
   toggleGame() {
