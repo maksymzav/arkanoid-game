@@ -7,10 +7,10 @@ describe('CanvasMovement', () => {
     const canvasMovement = new CanvasMovement(
       new Canvas(100, 50),
       [
-        new Boundary( 'y', {x1: 0 , y1: 50, x2: 100, y2: 50}),
-        new Boundary(  'y', {x1: 0 , y1: 0, x2: 100, y2: 0}),
-       new Boundary('x', {x1: 100, y1: 0, x2: 100, y2: 50}),
-       new Boundary('x', {x1: 0, y1: 0, x2: 0, y2: 50}),
+        new Boundary('y', {x1: 0, y1: 50, x2: 100, y2: 50}),
+        new Boundary('y', {x1: 0, y1: 0, x2: 100, y2: 0}),
+        new Boundary('x', {x1: 100, y1: 0, x2: 100, y2: 50}),
+        new Boundary('x', {x1: 0, y1: 0, x2: 0, y2: 50}),
       ],
     );
     const iterator = canvasMovement.getPath();

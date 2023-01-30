@@ -3,8 +3,6 @@ import {PathStep} from './path-step';
 import {Boundary} from './boundary';
 import {Canvas} from './canvas';
 
-const defaultStep = 10;
-
 export class CanvasMovement {
 
   active = true;
@@ -14,7 +12,7 @@ export class CanvasMovement {
     this.pathStep = this.initializePathStep(canvas);
   }
 
-  * getPath(): Iterator<{ x: number, y: number }> {
+  * getPath(): Iterator<{ x: number, y: number, outsideCanvas: boolean }> {
     yield this.getMovementState();
     while (this.active) {
       const line = this.pathStep.getSegment();
@@ -37,7 +35,7 @@ export class CanvasMovement {
     return new PathStep(
       Math.floor(canvas.width / 2),
       1,
-      defaultStep,
+      canvas.step,
     );
   }
 
