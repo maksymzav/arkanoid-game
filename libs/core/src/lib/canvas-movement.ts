@@ -1,38 +1,36 @@
 import Flatten from '@flatten-js/core';
 import {PathStep} from './path-step';
-import {Canvas} from './game';
 import {Boundary} from './boundary';
+import {Canvas} from './canvas';
 
 const defaultStep = 10;
 
 export class CanvasMovement {
 
   active = true;
-  private boundaries: Boundary[];
   private pathStep: PathStep;
 
-  constructor(canvas: Canvas, boundaries: { axis: 'x' | 'y', coordinate: number }[] = []) {
+  constructor(private canvas: Canvas, private boundaries: Boundary[] = []) {
     this.pathStep = this.initializePathStep(canvas);
-    this.boundaries = this.initializeBoundaries(boundaries, canvas);
   }
 
   * getPath(): Iterator<{ x: number, y: number }> {
-    yield {x: this.pathStep.x, y: this.pathStep.y};
+    yield this.getMovementState();
     while (this.active) {
       const line = this.pathStep.getSegment();
       const intersections = this.findBoundaryIntersections(line);
       this.calculateReflection(intersections);
       this.pathStep.setNextStep();
-      yield {x: this.pathStep.x, y: this.pathStep.y};
+      yield this.getMovementState();
     }
   }
 
-  private initializeBoundaries(boundaries: { axis: 'x' | 'y'; coordinate: number }[], canvas: Canvas) {
-    return boundaries.map(boundary =>
-      boundary.axis === 'x'
-        ? Boundary.createForAxisX(boundary.coordinate, 0, canvas.width)
-        : Boundary.createForAxisY(boundary.coordinate, 0, canvas.height)
-    );
+  private getMovementState(){
+    return {
+      x: this.pathStep.x,
+      y: this.pathStep.y,
+      outsideCanvas: this.pathStep.x > this.canvas.width || this.pathStep.x < 0 || this.pathStep.y > this.canvas.height || this.pathStep.y < 0
+    }
   }
 
   private initializePathStep(canvas: Canvas) {
@@ -50,10 +48,10 @@ export class CanvasMovement {
 
   private calculateReflection(intersection: Boundary[]) {
     intersection.forEach(intersection => {
-      if (intersection.axis === 'x') {
-        this.pathStep.reflectY();
-      } else {
+      if (intersection.reflectionAxis === 'x') {
         this.pathStep.reflectX();
+      } else {
+        this.pathStep.reflectY();
       }
     });
   }

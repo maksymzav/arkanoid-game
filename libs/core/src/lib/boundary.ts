@@ -4,24 +4,14 @@ import Point = Flatten.Point;
 
 export class Boundary {
 
+  public reflectionAxis: 'x' | 'y';
+  public line: Segment;
+
   constructor(
-    public axis: 'x' | 'y',
-    public line: Segment,
+    reflectionAxis: 'x' | 'y',
+    {x1, y1, x2, y2}: { x1: number, y1: number, x2: number, y2: number }
   ) {
-
-  }
-
-  static createForAxisY(x: number, startY: number, endY: number) {
-    return new Boundary(
-      'y',
-      new Segment(new Point(x, startY), new Point(x, endY))
-    );
-  }
-
-  static createForAxisX(y: number, startX: number, endX: number) {
-    return new Boundary(
-      'x',
-      new Segment(new Point(startX, y), new Point(endX, y)),
-    );
+    this.reflectionAxis = reflectionAxis;
+    this.line = new Segment(new Point(x1, y1), new Point(x2, y2));
   }
 }
