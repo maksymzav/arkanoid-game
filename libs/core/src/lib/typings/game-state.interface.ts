@@ -1,3 +1,5 @@
+import {Boundary} from '../boundary';
+
 export interface GameState {
   gameFinished: boolean;
 
@@ -5,4 +7,6 @@ export interface GameState {
     x: number;
     y: number;
   };
+
+  intersection: Boundary[];
 }

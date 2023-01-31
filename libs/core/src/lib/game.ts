@@ -32,6 +32,7 @@ export class Game {
         this.gameState$.next({
             ballPosition: {x: next.x, y: next.y},
             gameFinished,
+            intersection: next.intersection,
           }
         );
         if (gameFinished) {

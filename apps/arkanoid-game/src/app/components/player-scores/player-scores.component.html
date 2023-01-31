@@ -1,0 +1,4 @@
+<ng-container *ngIf="playersScore$ | async as playersScore">
+  <div>Player 1 score: {{playersScore.playerOne}}</div>
+  <div>Player 2 score: {{playersScore.playerTwo}}</div>
+</ng-container>

@@ -22,18 +22,21 @@ export class CanvasMovement {
     while (this.active) {
       const line = this.pathStep.getSegment();
       const intersections = this.findBoundaryIntersections(line);
+
+
       this.calculateReflection(intersections);
       this.pathStep.setNextStep();
-      yield this.getMovementState();
+      yield this.getMovementState(intersections.filter((boundary: Boundary) => boundary.trackInteraction));
     }
   }
 
-  private getMovementState(){
+  private getMovementState(intersection: Boundary[] = []) {
     return {
       x: this.pathStep.x,
       y: this.pathStep.y,
-      outsideCanvas: this.pathStep.x > this.canvas.width || this.pathStep.x < 0 || this.pathStep.y > this.canvas.height || this.pathStep.y < 0
-    }
+      outsideCanvas: this.pathStep.x > this.canvas.width || this.pathStep.x < 0 || this.pathStep.y > this.canvas.height || this.pathStep.y < 0,
+      intersection,
+    };
   }
 
   private initializePathStep(canvas: Canvas) {

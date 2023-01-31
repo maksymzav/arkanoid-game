@@ -29,6 +29,19 @@ export class PlayersComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.initializePlayers();
+    this.trackScore();
+  }
+
+  private trackScore() {
+    this.gameStore.gameState$.subscribe(({intersection}) => {
+      intersection.forEach(boundary => {
+        if (boundary === this.player1) {
+          this.gameStore.incrementPlayerOneScore();
+        } else if (boundary === this.player2) {
+          this.gameStore.incrementPlayerTwoScore();
+        }
+      });
+    });
   }
 
   ngOnDestroy() {
@@ -82,7 +95,8 @@ export class PlayersComponent implements OnInit, OnDestroy {
       x1: this.player1Config.startPositionX,
       y1: this.player1Config.positionY,
       x2: this.player1Config.startPositionX + this.player1Config.width,
-      y2: this.player1Config.positionY + this.player1Config.height - this.circleSize
+      y2: this.player1Config.positionY + this.player1Config.height - this.circleSize,
+      trackInteraction: true,
     });
   }
 
@@ -91,7 +105,8 @@ export class PlayersComponent implements OnInit, OnDestroy {
       x1: this.player2Config.startPositionX,
       y1: this.player2Config.positionY,
       x2: this.player2Config.startPositionX + this.player2Config.width,
-      y2: this.player2Config.positionY + this.player2Config.height - this.circleSize
+      y2: this.player2Config.positionY + this.player2Config.height - this.circleSize,
+      trackInteraction: true,
     });
   }
 
@@ -100,7 +115,8 @@ export class PlayersComponent implements OnInit, OnDestroy {
       x1: 0,
       y1: 0,
       x2: this.canvas.width - this.circleSize,
-      y2: 0
+      y2: 0,
+      trackInteraction: false,
     });
   }
 
@@ -109,7 +125,8 @@ export class PlayersComponent implements OnInit, OnDestroy {
       x1: 0,
       y1: this.canvas.height - this.circleSize,
       x2: this.canvas.width - this.circleSize,
-      y2: this.canvas.height - this.circleSize
+      y2: this.canvas.height - this.circleSize,
+      trackInteraction: false,
     });
   }
 
