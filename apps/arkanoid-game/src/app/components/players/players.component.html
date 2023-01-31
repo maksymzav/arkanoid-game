@@ -1,0 +1,20 @@
+<ng-container *ngIf="playerState$ | async as playerState">
+  <arkanoid-game-player-control
+    *ngIf="playerState.playerOneOn"
+    [height]="player1Config.height"
+    [topPosition]="player1Config.positionY"
+    [maxX]="canvas.width"
+    (xPositionChange)="player1.update({x1:$event, x2: $event+player1Config.width})"
+
+  ></arkanoid-game-player-control>
+
+  <arkanoid-game-player-control
+    *ngIf="playerState.playerTwoOn"
+    [height]="player2Config.height"
+    [topPosition]="player2Config.positionY"
+    [maxX]="canvas.width"
+    moveRightControl="d"
+    moveLeftControl="a"
+    (xPositionChange)="player2.update({x1:$event, x2: $event+player2Config.width})"
+  ></arkanoid-game-player-control>
+</ng-container>

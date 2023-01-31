@@ -25,7 +25,7 @@ export class Game {
   }
 
   play() {
-    this.timer = timer(0, 5)
+    this.timer = timer(0, 1)
       .subscribe(() => {
         const next = this.getPath.next().value;
         const gameFinished = next.outsideCanvas;

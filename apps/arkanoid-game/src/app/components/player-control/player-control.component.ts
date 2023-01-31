@@ -26,8 +26,8 @@ export class PlayerControlComponent {
   @Input() height = 5;
   @Input() topPosition = 0;
   @Input() leftPosition = 0;
-  @Input() moveRightControl = Key.ArrowRight;
-  @Input() moveLeftControl = Key.ArrowLeft;
+  @Input() moveRightControl: Key | string = Key.ArrowRight;
+  @Input() moveLeftControl: Key | string = Key.ArrowLeft;
   @Input() maxX = 50;
 
   @Output() xPositionChange = new EventEmitter<number>();

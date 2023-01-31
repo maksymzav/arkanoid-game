@@ -1,9 +1,5 @@
 <div #container class="container" (click)="toggleGame()">
   <arkanoid-game-circle></arkanoid-game-circle>
-  <arkanoid-game-player-control
-    [height]="5"
-    [topPosition]="canvas.height - 5"
-    [maxX] = canvas.width
-    (xPositionChange)="player1.update({x1:$event, x2: $event+player1Config.width})"
-  ></arkanoid-game-player-control>
+  <arkanoid-game-players></arkanoid-game-players>
 </div>
+<arkanoid-game-players-controls></arkanoid-game-players-controls>

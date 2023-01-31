@@ -1,0 +1,13 @@
+<div *ngIf="playersState$ | async as playersState">
+  <input type="checkbox"
+         #playerOne="ngModel"
+         [ngModel]="playersState.playerOneOn"
+         (change)="updatePlayersState({playerOneOn: playerOne.value})"
+  > Player one on
+  <input type="checkbox"
+         #playerTwo="ngModel"
+         [ngModel]="playersState.playerTwoOn"
+         (change)="updatePlayersState({playerTwoOn: playerTwo.value})"
+  >Player two on
+</div>
+

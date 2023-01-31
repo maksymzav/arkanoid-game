@@ -4,10 +4,19 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { CircleComponent } from './components/circle/circle.component';
 import { PlayerControlComponent } from './components/player-control/player-control.component';
+import { PlayersComponent } from './components/players/players.component';
+import { FormsModule } from '@angular/forms';
+import { PlayersControlsComponent } from './components/players-controls/players-controls.component';
 
 @NgModule({
-  declarations: [AppComponent, CircleComponent, PlayerControlComponent],
-  imports: [BrowserModule],
+  declarations: [
+    AppComponent,
+    CircleComponent,
+    PlayerControlComponent,
+    PlayersComponent,
+    PlayersControlsComponent,
+  ],
+  imports: [BrowserModule, FormsModule],
   providers: [],
   bootstrap: [AppComponent],
 })

@@ -22,8 +22,8 @@ export class Boundary {
     const currentY2 = this.line.end.y;
 
     this.line = new Segment(
-      new Point(x1 || currentX1, y1 || currentY1),
-      new Point(x2 || currentX2, y2 || currentY2)
+      new Point(x1 ?? currentX1, y1 ?? currentY1),
+      new Point(x2 ?? currentX2, y2 ?? currentY2)
     );
   }
 }

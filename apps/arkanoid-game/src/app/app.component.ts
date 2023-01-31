@@ -1,13 +1,22 @@
-import {Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
+import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
 import {Boundary, Canvas, CanvasMovement, Game, GameState} from '@arkanoid-game/core';
 import {GameStore} from '../game.store';
+import {first, mergeMap, Subscription} from 'rxjs';
 
 @Component({
   selector: 'arkanoid-game-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
+
+  private gameStarted = false;
+  private circleSize = 10;
+  private game!: Game;
+  private subscription = new Subscription();
+
+  constructor(private gameStore: GameStore) {
+  }
 
   @HostListener('window: keyup', ['$event'])
   watchGameToggle(event: KeyboardEvent) {
@@ -16,60 +25,13 @@ export class AppComponent implements OnInit {
     }
   }
 
-  @ViewChild('container', {static: true}) container!: ElementRef<HTMLDivElement>;
-  canvas = {width: 500, height: 400};
-  gameStarted = false;
-  private game!: Game;
-  circleSize = 10;
-
-  player1Config = {
-    width: 50,
-    height: 10,
-    startPositionX: this.canvas.width - 25,
-    positionY: this.canvas.height - 10,
-  };
-  player1 = new Boundary('y', {
-    x1: this.player1Config.startPositionX,
-    y1: this.player1Config.positionY,
-    x2: this.player1Config.startPositionX + this.player1Config.width,
-    y2: this.player1Config.positionY + this.player1Config.height - this.circleSize
-  });
-
-  constructor(private gameStore: GameStore) {
-  }
-
   ngOnInit() {
+    this.initializeStore();
     this.initializeGame();
   }
 
-  private initializeGame() {
-    const movementStrategy = new CanvasMovement(
-      new Canvas(this.canvas.width, this.canvas.height, 0.5),
-      [
-        this.player1,
-        new Boundary('y', {
-          x1: 0,
-          y1: 0,
-          x2: this.canvas.width - this.circleSize,
-          y2: 0
-        }),
-        new Boundary('x', {
-          x1: this.canvas.width - this.circleSize,
-          y1: 0,
-          x2: this.canvas.width - this.circleSize,
-          y2: this.canvas.height - this.circleSize
-        }),
-        new Boundary('x', {
-          x1: 0,
-          y1: 0,
-          x2: 0,
-          y2: this.canvas.height - this.circleSize
-        }),
-      ],
-    );
-    this.game = new Game(movementStrategy);
-
-    this.game.getGameState().subscribe((gameState: GameState) => this.gameStore.setGameState(gameState));
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   toggleGame() {
@@ -80,5 +42,41 @@ export class AppComponent implements OnInit {
       this.game.play();
       this.gameStarted = true;
     }
+  }
+
+  private initializeStore() {
+    this.gameStore.setCircleSize(this.circleSize);
+  }
+
+  private initializeGame() {
+    const subscription = this.gameStore.canvas$.pipe(
+      first(),
+      mergeMap(canvas => {
+        const movementStrategy = this.getMovementStrategy(canvas);
+        this.initializeBoundaries(movementStrategy, canvas);
+        this.gameStore.setCanvasMovement(movementStrategy);
+        this.game = new Game(movementStrategy);
+        return this.game.getGameState();
+      }),
+    ).subscribe((gameState: GameState) => {
+      this.gameStore.setGameState(gameState);
+    });
+    this.subscription.add(subscription);
+  }
+
+  private getMovementStrategy({width, height}: { width: number, height: number }) {
+    return new CanvasMovement(
+      new Canvas(width, height, 0.5),
+    );
+  }
+
+  private initializeBoundaries(canvasMovement: CanvasMovement, {width, height}: { width: number, height: number }) {
+    canvasMovement.addBoundary(new Boundary('x', {
+      x1: width - this.circleSize,
+      y1: 0,
+      x2: width - this.circleSize,
+      y2: height - this.circleSize
+    }));
+    canvasMovement.addBoundary(new Boundary('x', {x1: 0, y1: 0, x2: 0, y2: height - this.circleSize}));
   }
 }

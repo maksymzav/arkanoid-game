@@ -7,9 +7,14 @@ export class CanvasMovement {
 
   active = true;
   private pathStep: PathStep;
+  private boundaries: Boundary[] = []
 
-  constructor(private canvas: Canvas, private boundaries: Boundary[] = []) {
+  constructor(private canvas: Canvas) {
     this.pathStep = this.initializePathStep(canvas);
+  }
+
+  addBoundary(boundary: Boundary){
+    this.boundaries.push(boundary);
   }
 
   * getPath(): Iterator<{ x: number, y: number, outsideCanvas: boolean }> {
